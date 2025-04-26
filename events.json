@@ -10,11 +10,11 @@
       "name": "Sophia Collins",
       "image": "https://wincacademy.github.io/webpages/media/article-author.png"
     },
-	{
+    {
       "id": 3,
       "name": "Emily Carter",
       "image": "https://wincacademy.github.io/webpages/media/person9.jpeg"
-	}
+    }
   ],
   "events": [
     {
@@ -122,18 +122,46 @@
       "startTime": "2023-03-16T07:00:00.000Z",
       "endTime": "2023-03-16T09:30:00.000Z"
     },
-	{
+    {
       "id": 9,
       "createdBy": 3,
       "title": "Bowling night",
       "description": "Strike up some fun with friends at the lanes!",
       "image": "https://wincacademy.github.io/webpages/media/pexels-rnnzeravac-9273055.jpg",
-      "categoryIds": [2],
+      "categoryIds": [
+        2
+      ],
       "location": "Downtown Bowling Alley",
       "startTime": "2023-03-19T18:00:00.000Z",
       "endTime": "2023-03-19T21:00:00.000Z"
-	}
-	
+    },
+    {
+      "title": "Poolen",
+      "description": "Lekker potje poolen",
+      "image": "https://media.istockphoto.com/id/1370682737/nl/foto/a-group-of-young-people-came-to-play-billiards-and-in-the-young-hands-was-a-cane-and-layers.jpg?s=612x612&w=0&k=20&c=HxYRRi6xSJTKAHs1lJEFOPMG10m4MvBuEITeKgdtSVA=",
+      "startTime": "2025-04-26T12:00",
+      "endTime": "2025-04-26T15:00",
+      "categoryIds": [
+        1
+      ],
+      "id": 10
+    },
+    {
+      "title": "blah",
+      "description": "blah",
+      "startTime": "2025-05-03T11:00",
+      "endTime": "2025-05-03T22:00",
+      "categoryId": "1",
+      "id": 11
+    },
+    {
+      "title": "yyy",
+      "description": "yy",
+      "startTime": "2025-04-23T12:00",
+      "endTime": "2025-05-02T03:04",
+      "categoryId": "1",
+      "id": 12
+    }
   ],
   "categories": [
     {
