@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FormControl,
   FormLabel,
@@ -9,7 +9,12 @@ import {
   HStack,
 } from "@chakra-ui/react";
 
-const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
+const EventForm = ({
+  onSubmit,
+  categories = [],
+  users = [],
+  initialData = null,
+}) => {
   const [formData, setFormData] = useState(
     initialData || {
       title: "",
@@ -19,8 +24,25 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
       endTime: "",
       image: "",
       categoryIds: [],
+      createdBy: "", // Voeg createdBy toe
     }
   );
+
+  useEffect(() => {
+    // Als er initialData is (bij bewerken van een event), stel dan de formData in.
+    if (initialData) {
+      setFormData({
+        title: initialData.title,
+        description: initialData.description,
+        location: initialData.location,
+        startTime: formatDateForInput(initialData.startTime),
+        endTime: formatDateForInput(initialData.endTime),
+        image: initialData.image,
+        categoryIds: initialData.categoryIds,
+        createdBy: initialData.createdBy, // Bij bewerken niet aanpassen
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +55,14 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
     setFormData((prevData) => {
+      const val = Number(value);
       let newCategoryIds = [...prevData.categoryIds];
       if (checked) {
-        newCategoryIds.push(parseInt(value));
+        if (!newCategoryIds.includes(val)) {
+          newCategoryIds.push(val);
+        }
       } else {
-        newCategoryIds = newCategoryIds.filter((id) => id !== parseInt(value));
+        newCategoryIds = newCategoryIds.filter((id) => id !== val);
       }
       return {
         ...prevData,
@@ -46,21 +71,17 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
     });
   };
 
-  const getRandomUserId = () => {
-    const randomIndex = Math.floor(Math.random() * users.length);
-    return users[randomIndex].id;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (
       !formData.title ||
       !formData.description ||
-      formData.categoryIds.length === 0
+      formData.categoryIds.length === 0 ||
+      (!initialData && !formData.createdBy) // Controleer of er geen initialData is en of createdBy is ingevuld bij toevoegen
     ) {
       alert(
-        "Please fill in all required fields, and select at least one category."
+        "Please fill in all required fields, and select at least one category and a user (only for new events)."
       );
       return;
     }
@@ -69,13 +90,13 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
       ...formData,
       startTime: new Date(formData.startTime).toISOString(),
       endTime: new Date(formData.endTime).toISOString(),
-      createdBy: getRandomUserId(), // <-- hier voegen we de random user toe
     };
 
-    console.log("Formatted form data with random user:", formattedData);
+    console.log("Formatted form data with selected user:", formattedData);
 
-    onSubmit(formattedData);
+    onSubmit(formattedData); // Deze onSubmit moet de logica aanroepen die in EventModal of een andere bovenliggende component zit
 
+    // Reset het formulier na succesvolle submit
     setFormData({
       title: "",
       description: "",
@@ -84,7 +105,13 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
       endTime: "",
       image: "",
       categoryIds: [],
+      createdBy: "", // Reset createdBy
     });
+  };
+
+  const formatDateForInput = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 16); // Formatteer naar 'YYYY-MM-DDTHH:MM'
   };
 
   return (
@@ -164,8 +191,26 @@ const EventForm = ({ onSubmit, categories = [], initialData = null }) => {
         </HStack>
       </FormControl>
 
+      {!initialData && ( // Alleen weergeven bij het toevoegen van een nieuw event
+        <FormControl mb={4} isRequired>
+          <FormLabel>Created By</FormLabel>
+          <select
+            name="createdBy"
+            value={formData.createdBy}
+            onChange={handleChange}
+          >
+            <option value="">Select a user</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
+        </FormControl>
+      )}
+
       <Button type="submit" colorScheme="blue" width="full">
-        Add Event
+        {initialData ? "Update Event" : "Add Event"}
       </Button>
     </form>
   );

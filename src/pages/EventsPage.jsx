@@ -12,7 +12,7 @@ import {
 import EventCard from "../components/EventCard";
 import EventModal from "../components/EventModal";
 import SearchBar from "../components/SearchBar";
-import EventFilter from "../components/EventFilter"; // Import EventFilter
+import EventFilter from "../components/EventFilter";
 
 export const loader = async () => {
   try {
@@ -25,7 +25,11 @@ export const loader = async () => {
     if (!categoriesResponse.ok) throw new Error("Error fetching categories");
     const categoriesData = await categoriesResponse.json();
 
-    return { events: eventsData, categories: categoriesData };
+    const usersResponse = await fetch("http://localhost:3000/users");
+    if (!usersResponse.ok) throw new Error("Error fetching users");
+    const usersData = await usersResponse.json();
+
+    return { events: eventsData, categories: categoriesData, users: usersData };
   } catch (error) {
     console.error("Error loading data:", error);
     throw new Response("There was an issue fetching the data.", {
@@ -49,7 +53,7 @@ const getCategoriesForEvent = (categoryIds, categories) => {
 };
 
 export const EventsPage = () => {
-  const { events: initialEvents, categories } = useLoaderData();
+  const { events: initialEvents, categories, users } = useLoaderData();
   const [events, setEvents] = useState(initialEvents);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // New state to store search term
@@ -131,7 +135,7 @@ export const EventsPage = () => {
       />
 
       <Button colorScheme="blue" mb={4} onClick={handleModalOpen}>
-        Add Event
+        Add event
       </Button>
 
       {filteredEvents.length === 0 ? (
@@ -159,7 +163,8 @@ export const EventsPage = () => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         categories={categories}
-        onEventAdded={handleAddEvent}
+        onSubmit={handleAddEvent} // Verander dit naar 'onSubmit' i.p.v. 'onEventAdded'
+        users={users}
       />
     </Container>
   );

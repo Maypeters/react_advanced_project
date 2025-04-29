@@ -14,9 +14,11 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import EventForm from "../components/EventForm";
+import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
 export const loader = async ({ params }) => {
   const { eventId } = params;
@@ -53,6 +55,9 @@ export const loader = async ({ params }) => {
 };
 
 export const EventPage = () => {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const openDeleteModal = () => setIsDeleteOpen(true);
+  const closeDeleteModal = () => setIsDeleteOpen(false);
   const { event, eventCategories, user, categories } = useLoaderData();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,6 +66,8 @@ export const EventPage = () => {
   const startTime = new Date(currentEvent.startTime).toLocaleString();
   const endTime = new Date(currentEvent.endTime).toLocaleString();
   const eventUser = user ? user.name : "Unknown";
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handleUpdate = async (updatedData) => {
     try {
@@ -80,11 +87,64 @@ export const EventPage = () => {
       }
 
       const updatedEvent = await response.json();
-      setCurrentEvent(updatedEvent); // Update de event in de state
-      onClose(); // Sluit de modal
+      setCurrentEvent(updatedEvent);
+      onClose();
+
+      toast({
+        title: "Event updated.",
+        description: "The event has been successfully updated.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
     } catch (error) {
       console.error(error);
-      alert("There was a problem updating the event.");
+      toast({
+        title: "Update failed.",
+        description: "There was a problem updating the event.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/events/${currentEvent.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete event");
+      }
+
+      toast({
+        title: "Event deleted.",
+        description: "The event has been successfully deleted.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      // Verwijs terug naar event list of homepage
+      navigate("/");
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was a problem deleting the event.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      console.error(error);
+    } finally {
+      closeDeleteModal();
     }
   };
 
@@ -214,6 +274,15 @@ export const EventPage = () => {
             </ModalBody>
           </ModalContent>
         </Modal>
+        <Button colorScheme="red" mt={4} width="full" onClick={openDeleteModal}>
+          Delete Event
+        </Button>
+
+        <DeleteConfirmationModal
+          isOpen={isDeleteOpen}
+          onClose={closeDeleteModal}
+          onConfirm={handleDelete}
+        />
       </Box>
     </Box>
   );

@@ -9,20 +9,34 @@ import {
 } from "@chakra-ui/react";
 import EventForm from "./EventForm";
 
-const EventModal = ({ isOpen, onClose, categories, onEventAdded }) => {
+const EventModal = ({
+  isOpen,
+  onClose,
+  categories,
+  onSubmit,
+  users,
+  initialData,
+}) => {
+  const handleFormSubmit = (formData) => {
+    // Call the onSubmit prop (which could be for both adding and updating events)
+    onSubmit(formData);
+    onClose(); // Close the modal after submitting the form
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add New Event</ModalHeader>
+        <ModalHeader>
+          {initialData ? "Edit Event" : "Add New Event"}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <EventForm
-            onSubmit={(formData) => {
-              onEventAdded(formData); // Doorgeven van de data naar de parent
-              onClose(); // Sluit de modal na toevoegen
-            }}
+            onSubmit={handleFormSubmit} // Pass the handler function to EventForm
             categories={categories}
+            users={users}
+            initialData={initialData}
           />
         </ModalBody>
       </ModalContent>
