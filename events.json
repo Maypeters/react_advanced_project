@@ -161,6 +161,145 @@
       "endTime": "2025-05-02T03:04",
       "categoryId": "1",
       "id": 12
+    },
+    {
+      "title": "",
+      "description": "",
+      "startTime": "",
+      "endTime": "",
+      "categoryId": "",
+      "id": 13
+    },
+    {
+      "title": "Test",
+      "description": "Test",
+      "startTime": "2025-05-04T12:00",
+      "endTime": "2025-04-30T10:00",
+      "categoryId": 1,
+      "imageUrl": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fmastare.nl%2Fplaceholder-png-6%2F&psig=AOvVaw10aQ7CbxDYcwnFgzTTyf_g&ust=1745858882232000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNDZy6XV-IwDFQAAAAAdAAAAABAE",
+      "id": 14
+    },
+    {
+      "title": "test 2",
+      "description": "test",
+      "startTime": "2025-04-26T12:00",
+      "endTime": "2025-04-26T13:00",
+      "categoryId": "2",
+      "imageUrl": "https://mastare.nl/wp-content/uploads/2022/03/placeholder-1.png",
+      "id": 15
+    },
+    {
+      "title": "test 200",
+      "description": "test ffff",
+      "image": "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+      "location": "Nowhere",
+      "startTime": "2025-05-04T04:06",
+      "endTime": "2025-05-11T06:06",
+      "categoryIds": "2",
+      "id": 16
+    },
+    {
+      "title": "6666",
+      "description": "6666",
+      "location": "ergens",
+      "startTime": "2025-05-04T03:03",
+      "endTime": "2025-05-04T04:44",
+      "image": "https://static.thenounproject.com/png/1269202-200.png",
+      "categoryIds": [
+        3
+      ],
+      "id": 17
+    },
+    {
+      "title": "Hoi",
+      "description": "test",
+      "location": "Nederand",
+      "startTime": "2025-05-08T12:00",
+      "endTime": "2025-05-08T13:00",
+      "image": "https://img.freepik.com/psd-gratis/bitterkoekje-geisoleerd-op-transparante-achtergrond_191095-35017.jpg?semt=ais_hybrid&w=740",
+      "categoryIds": [
+        2
+      ],
+      "id": 18
+    },
+    {
+      "title": "nieuw",
+      "description": "nieuw",
+      "location": "somewhere",
+      "startTime": "2025-04-29T08:00:00.000Z",
+      "endTime": "2025-04-29T10:00:00.000Z",
+      "image": "https://img.freepik.com/premium-psd/png-fantasy-flower-neon-art-illustration_53876-607319.jpg",
+      "categoryIds": [
+        1,
+        2,
+        3
+      ],
+      "id": 19
+    },
+    {
+      "title": "lihgb",
+      "description": "lihb",
+      "location": "lkhbv",
+      "startTime": "2025-05-07T22:00:00.000Z",
+      "endTime": "2025-05-07T22:00:00.000Z",
+      "image": "https://images.rawpixel.com/image_png_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvam9iNjgwLTE2Ni1wLWwxZGJ1cTN2LnBuZw.png",
+      "categoryIds": [
+        2,
+        1
+      ],
+      "id": 20
+    },
+    {
+      "title": "nieuwe test",
+      "description": "yeah!",
+      "location": "Arnhem",
+      "startTime": "2025-04-29T20:22:00.000Z",
+      "endTime": "2025-04-30T01:03:00.000Z",
+      "image": "https://img.freepik.com/free-psd/cineraria-flower-png-isolated-transparent-background_191095-10910.jpg?w=360",
+      "categoryIds": [
+        1
+      ],
+      "id": 21
+    },
+    {
+      "title": "iuiuhgitdufghjk",
+      "description": "szyrdxtfcgyhu",
+      "location": "asedrtfgyhu",
+      "startTime": "2025-04-29T07:09:00.000Z",
+      "endTime": "2025-04-30T07:09:00.000Z",
+      "image": "https://as2.ftcdn.net/v2/jpg/04/38/82/85/360_F_438828559_QccWdc3zAULf7uLTzekIt5XlOEnGj6X0.jpg",
+      "categoryIds": [
+        2
+      ],
+      "createdBy": 1,
+      "id": 22
+    },
+    {
+      "title": "ygh",
+      "description": "ugh",
+      "location": "ftgy",
+      "startTime": "2025-04-30T05:07:00.000Z",
+      "endTime": "2025-05-01T05:07:00.000Z",
+      "image": "https://i.pinimg.com/736x/50/99/7e/50997e290e0ad0508af471f3eaef0e5a.jpg",
+      "categoryIds": [
+        2
+      ],
+      "createdBy": 1,
+      "id": 23
+    },
+    {
+      "title": "ycigvuhbjnk",
+      "description": "fcgvhbnjik",
+      "location": "cvgybhuji",
+      "startTime": "2025-04-30T06:08:00.000Z",
+      "endTime": "2025-04-30T06:08:00.000Z",
+      "image": "https://cdn.pixabay.com/photo/2017/06/04/23/57/stem-2372543_640.png",
+      "categoryIds": [
+        3,
+        2
+      ],
+      "createdBy": 1,
+      "id": 24
     }
   ],
   "categories": [
