@@ -129,6 +129,7 @@ const EventForm = ({
       <FormControl mb={4} isRequired>
         <FormLabel>Title</FormLabel>
         <Input
+          autoFocus
           type="text"
           name="title"
           value={formData.title}

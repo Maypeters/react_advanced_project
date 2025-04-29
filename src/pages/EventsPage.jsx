@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import {
-  SimpleGrid,
-  Heading,
-  Container,
-  Text,
-  Button,
-  Box,
-  Spinner,
-} from "@chakra-ui/react";
+import { SimpleGrid, Heading, Container, Text, Button } from "@chakra-ui/react";
 import EventCard from "../components/EventCard";
 import EventModal from "../components/EventModal";
 import SearchBar from "../components/SearchBar";
@@ -112,20 +104,6 @@ export const EventsPage = () => {
       (categoryId) => String(categoryId) === String(selectedCategory)
     );
   });
-
-  // If events or categories are not loaded yet, show a loading spinner
-  if (!events || !categories) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Spinner size="xl" />
-      </Box>
-    );
-  }
 
   return (
     <Container maxW="container.xl" py={10}>
