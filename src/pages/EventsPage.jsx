@@ -16,19 +16,23 @@ import EventFilter from "../components/EventFilter";
 
 export const loader = async () => {
   try {
+    // Fetch events from the server
     const eventsResponse = await fetch("http://localhost:3000/events");
     if (!eventsResponse.ok) throw new Error("Error fetching events");
     const eventsData = await eventsResponse.json();
-    console.log("Events Data:", eventsData); // Dit toont de evenementen in de console
+    console.log("Events Data:", eventsData); // This logs the events in the console
 
+    // Fetch categories from the server
     const categoriesResponse = await fetch("http://localhost:3000/categories");
     if (!categoriesResponse.ok) throw new Error("Error fetching categories");
     const categoriesData = await categoriesResponse.json();
 
+    // Fetch users from the server
     const usersResponse = await fetch("http://localhost:3000/users");
     if (!usersResponse.ok) throw new Error("Error fetching users");
     const usersData = await usersResponse.json();
 
+    // Return events, categories, and users data
     return { events: eventsData, categories: categoriesData, users: usersData };
   } catch (error) {
     console.error("Error loading data:", error);
@@ -38,7 +42,7 @@ export const loader = async () => {
   }
 };
 
-// Functie om categorieën voor een event op te halen op basis van categoryIds
+// Function to get categories for an event based on categoryIds
 const getCategoriesForEvent = (categoryIds, categories) => {
   const ids = Array.isArray(categoryIds) ? categoryIds : [categoryIds];
 
@@ -53,15 +57,18 @@ const getCategoriesForEvent = (categoryIds, categories) => {
 };
 
 export const EventsPage = () => {
+  // Get data from loader
   const { events: initialEvents, categories, users } = useLoaderData();
   const [events, setEvents] = useState(initialEvents);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // New state to store search term
-  const [selectedCategory, setSelectedCategory] = useState(""); // New state to store selected category
+  const [searchTerm, setSearchTerm] = useState(""); // State to store search term
+  const [selectedCategory, setSelectedCategory] = useState(""); // State to store selected category
 
+  // Open and close modal handlers
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
+  // Function to add new event
   const handleAddEvent = async (newEvent) => {
     try {
       const response = await fetch("http://localhost:3000/events", {
@@ -77,7 +84,7 @@ export const EventsPage = () => {
       const addedEvent = await response.json();
       console.log("Added Event:", addedEvent);
 
-      // Voeg het nieuwe event toe aan de state
+      // Add the new event to the state
       setEvents((prevEvents) => [...prevEvents, addedEvent]);
       setIsModalOpen(false);
     } catch (error) {
@@ -85,28 +92,28 @@ export const EventsPage = () => {
     }
   };
 
-  // Filter events op basis van de zoekterm
+  // Filter events based on the search term
   const filteredBySearch = events.filter((event) =>
     event.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Filter events op basis van de geselecteerde categorie
+  // Filter events based on the selected category
   const filteredEvents = filteredBySearch.filter((event) => {
-    // Als de geselecteerde categorie leeg is, neem dan alle evenementen mee
+    // If no category is selected, include all events
     if (!selectedCategory) return true;
 
-    // Zorg ervoor dat event.categoryIds een array is van strings
+    // Ensure event.categoryIds is an array
     if (!event.categoryIds || !Array.isArray(event.categoryIds)) {
       return true;
     }
 
-    // Als de geselecteerde categorie een string is en categoryIds een array van strings is,
-    // dan moet de filter kijken of de geselecteerde categorie voorkomt in categoryIds.
+    // Check if the selected category exists in event.categoryIds
     return event.categoryIds.some(
       (categoryId) => String(categoryId) === String(selectedCategory)
     );
   });
 
+  // If events or categories are not loaded yet, show a loading spinner
   if (!events || !categories) {
     return (
       <Box
@@ -126,7 +133,7 @@ export const EventsPage = () => {
         Events
       </Heading>
 
-      {/* Voeg SearchBar en EventFilter toe */}
+      {/* Add SearchBar and EventFilter components */}
       <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
       <EventFilter
         categories={categories}
@@ -138,6 +145,7 @@ export const EventsPage = () => {
         Add event
       </Button>
 
+      {/* Display a message if no events match the search or filter criteria */}
       {filteredEvents.length === 0 ? (
         <Text textAlign="center" fontSize="xl" color="gray.500">
           No events found for {searchTerm} in the {selectedCategory} category.
@@ -159,11 +167,12 @@ export const EventsPage = () => {
         </SimpleGrid>
       )}
 
+      {/* Event modal for adding new event */}
       <EventModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
         categories={categories}
-        onSubmit={handleAddEvent} // Verander dit naar 'onSubmit' i.p.v. 'onEventAdded'
+        onSubmit={handleAddEvent} // Change this to 'onSubmit' instead of 'onEventAdded'
         users={users}
       />
     </Container>

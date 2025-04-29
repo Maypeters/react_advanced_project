@@ -37,12 +37,11 @@
       "description": "Hit that shuttle!",
       "image": "https://wincacademy.github.io/webpages/media/pexels-vladvictoria-2202685.jpg",
       "categoryIds": [
-        1,
-        2
+        1
       ],
       "location": "The Park",
-      "startTime": "2023-03-15T12:00:00.000Z",
-      "endTime": "2023-03-15T13:30:00.000Z"
+      "startTime": "2023-03-15T11:00:00.000Z",
+      "endTime": "2023-03-15T12:30:00.000Z"
     },
     {
       "id": 4,

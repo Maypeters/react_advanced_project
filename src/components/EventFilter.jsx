@@ -7,15 +7,16 @@ const EventFilter = ({ categories, selectedCategory, onCategoryChange }) => {
     <Box mb={4}>
       <FormLabel htmlFor="category-filter">Filter by Category</FormLabel>
       <Select
-        id="category-filter"
-        value={selectedCategory}
+        id="category-filter" // ID for the select element
+        value={selectedCategory} // The currently selected category
         onChange={(e) => onCategoryChange(e.target.value)} // Update the category when changed
-        placeholder="Select a category"
-        size="lg"
+        placeholder="Select a category" // Placeholder text when no category is selected
+        size="lg" // Larger size for the select input
       >
+        {/* Map through categories and display each as an option */}
         {categories.map((category) => (
           <option key={category.id} value={category.id}>
-            {category.name}
+            {category.name} {/* Category name displayed */}
           </option>
         ))}
       </Select>

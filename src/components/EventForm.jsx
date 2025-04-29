@@ -1,3 +1,4 @@
+// components/EventForm.jsx
 import React, { useState, useEffect } from "react";
 import {
   FormControl,
@@ -10,11 +11,12 @@ import {
 } from "@chakra-ui/react";
 
 const EventForm = ({
-  onSubmit,
-  categories = [],
-  users = [],
-  initialData = null,
+  onSubmit, // Function to handle form submission
+  categories = [], // List of available categories
+  users = [], // List of available users for event creation
+  initialData = null, // Data for editing an existing event (if any)
 }) => {
+  // Initialize form data
   const [formData, setFormData] = useState(
     initialData || {
       title: "",
@@ -24,12 +26,12 @@ const EventForm = ({
       endTime: "",
       image: "",
       categoryIds: [],
-      createdBy: "", // Voeg createdBy toe
+      createdBy: "", // Add createdBy to track the user who created the event
     }
   );
 
+  // Effect to update formData if initialData is provided (for editing an event)
   useEffect(() => {
-    // Als er initialData is (bij bewerken van een event), stel dan de formData in.
     if (initialData) {
       setFormData({
         title: initialData.title,
@@ -39,11 +41,12 @@ const EventForm = ({
         endTime: formatDateForInput(initialData.endTime),
         image: initialData.image,
         categoryIds: initialData.categoryIds,
-        createdBy: initialData.createdBy, // Bij bewerken niet aanpassen
+        createdBy: initialData.createdBy, // Keep createdBy unchanged when editing
       });
     }
   }, [initialData]);
 
+  // Handle input field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -52,6 +55,7 @@ const EventForm = ({
     }));
   };
 
+  // Handle category checkbox changes
   const handleCategoryChange = (e) => {
     const { value, checked } = e.target;
     setFormData((prevData) => {
@@ -71,14 +75,16 @@ const EventForm = ({
     });
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Check if all required fields are filled in
     if (
       !formData.title ||
       !formData.description ||
       formData.categoryIds.length === 0 ||
-      (!initialData && !formData.createdBy) // Controleer of er geen initialData is en of createdBy is ingevuld bij toevoegen
+      (!initialData && !formData.createdBy) // Check if createdBy is selected for new events
     ) {
       alert(
         "Please fill in all required fields, and select at least one category and a user (only for new events)."
@@ -86,6 +92,7 @@ const EventForm = ({
       return;
     }
 
+    // Format dates to ISO string format for submission
     const formattedData = {
       ...formData,
       startTime: new Date(formData.startTime).toISOString(),
@@ -94,9 +101,10 @@ const EventForm = ({
 
     console.log("Formatted form data with selected user:", formattedData);
 
-    onSubmit(formattedData); // Deze onSubmit moet de logica aanroepen die in EventModal of een andere bovenliggende component zit
+    // Call the onSubmit function with the formatted data
+    onSubmit(formattedData);
 
-    // Reset het formulier na succesvolle submit
+    // Reset the form after successful submit
     setFormData({
       title: "",
       description: "",
@@ -109,13 +117,15 @@ const EventForm = ({
     });
   };
 
+  // Format date to match the input format 'YYYY-MM-DDTHH:MM'
   const formatDateForInput = (dateString) => {
     const date = new Date(dateString);
-    return date.toISOString().slice(0, 16); // Formatteer naar 'YYYY-MM-DDTHH:MM'
+    return date.toISOString().slice(0, 16); // Format as 'YYYY-MM-DDTHH:MM'
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {/* Title Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>Title</FormLabel>
         <Input
@@ -126,6 +136,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* Description Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>Description</FormLabel>
         <Textarea
@@ -135,6 +146,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* Location Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>Location</FormLabel>
         <Input
@@ -145,6 +157,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* Start Time Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>Start Time</FormLabel>
         <Input
@@ -155,6 +168,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* End Time Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>End Time</FormLabel>
         <Input
@@ -165,6 +179,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* Image URL Input */}
       <FormControl mb={4} isRequired>
         <FormLabel>Image URL</FormLabel>
         <Input
@@ -175,6 +190,7 @@ const EventForm = ({
         />
       </FormControl>
 
+      {/* Category Checkboxes */}
       <FormControl mb={4}>
         <FormLabel>Categories</FormLabel>
         <HStack spacing={4} wrap="wrap">
@@ -191,7 +207,8 @@ const EventForm = ({
         </HStack>
       </FormControl>
 
-      {!initialData && ( // Alleen weergeven bij het toevoegen van een nieuw event
+      {/* User Selection for New Events */}
+      {!initialData && (
         <FormControl mb={4} isRequired>
           <FormLabel>Created By</FormLabel>
           <select
@@ -209,6 +226,7 @@ const EventForm = ({
         </FormControl>
       )}
 
+      {/* Submit Button */}
       <Button type="submit" colorScheme="blue" width="full">
         {initialData ? "Update Event" : "Add Event"}
       </Button>

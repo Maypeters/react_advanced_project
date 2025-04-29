@@ -17,8 +17,9 @@ const EventModal = ({
   users,
   initialData,
 }) => {
+  // Handle form submission
   const handleFormSubmit = (formData) => {
-    // Call the onSubmit prop (which could be for both adding and updating events)
+    // Call the onSubmit prop (which could be used for both adding and updating events)
     onSubmit(formData);
     onClose(); // Close the modal after submitting the form
   };
@@ -28,10 +29,12 @@ const EventModal = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
+          {/* Conditional text based on whether initial data exists (for editing) */}
           {initialData ? "Edit Event" : "Add New Event"}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {/* EventForm receives the handler for form submission and initial data */}
           <EventForm
             onSubmit={handleFormSubmit} // Pass the handler function to EventForm
             categories={categories}

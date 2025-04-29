@@ -20,29 +20,30 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import EventForm from "../components/EventForm";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 
+// Loader function to fetch data for a specific event
 export const loader = async ({ params }) => {
   const { eventId } = params;
 
-  // Haal event op
+  // Fetch event data
   const eventResponse = await fetch(`http://localhost:3000/events/${eventId}`);
   if (!eventResponse.ok) {
     throw new Response("Event not found", { status: 404 });
   }
   const event = await eventResponse.json();
 
-  // Haal categorieën op
+  // Fetch categories data
   const categoriesResponse = await fetch("http://localhost:3000/categories");
   if (!categoriesResponse.ok) {
     throw new Response("Categories not found", { status: 404 });
   }
   const categories = await categoriesResponse.json();
 
-  // Haal de relevante categorieën op voor dit specifieke event
+  // Get the relevant categories for the event
   const eventCategories = event.categoryIds.map((categoryId) =>
     categories.find((category) => category.id === categoryId)
   );
 
-  // Haal de gebruiker op die het event heeft aangemaakt
+  // Fetch the user who created the event
   const userResponse = await fetch(
     `http://localhost:3000/users/${event.createdBy}`
   );
@@ -51,24 +52,26 @@ export const loader = async ({ params }) => {
   }
   const user = await userResponse.json();
 
-  return { event, eventCategories, user, categories }; // Geef zowel event, eventCategories als user terug
+  return { event, eventCategories, user, categories }; // Return event, eventCategories, and user
 };
 
+// Event page component
 export const EventPage = () => {
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const openDeleteModal = () => setIsDeleteOpen(true);
-  const closeDeleteModal = () => setIsDeleteOpen(false);
-  const { event, eventCategories, user, categories } = useLoaderData();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false); // State to control the delete modal visibility
+  const openDeleteModal = () => setIsDeleteOpen(true); // Open the delete modal
+  const closeDeleteModal = () => setIsDeleteOpen(false); // Close the delete modal
+  const { event, eventCategories, user, categories } = useLoaderData(); // Data from loader function
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [currentEvent, setCurrentEvent] = useState(event);
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Chakra UI modal control hooks
+  const [currentEvent, setCurrentEvent] = useState(event); // State to store the current event data
 
-  const startTime = new Date(currentEvent.startTime).toLocaleString();
-  const endTime = new Date(currentEvent.endTime).toLocaleString();
-  const eventUser = user ? user.name : "Unknown";
-  const toast = useToast();
-  const navigate = useNavigate();
+  const startTime = new Date(currentEvent.startTime).toLocaleString(); // Format event start time
+  const endTime = new Date(currentEvent.endTime).toLocaleString(); // Format event end time
+  const eventUser = user ? user.name : "Unknown"; // Get event creator's name (or 'Unknown' if not available)
+  const toast = useToast(); // Toast notifications
+  const navigate = useNavigate(); // React Router navigate function
 
+  // Handle event update
   const handleUpdate = async (updatedData) => {
     try {
       const response = await fetch(
@@ -86,9 +89,9 @@ export const EventPage = () => {
         throw new Error("Failed to update event");
       }
 
-      const updatedEvent = await response.json();
-      setCurrentEvent(updatedEvent);
-      onClose();
+      const updatedEvent = await response.json(); // Get updated event data
+      setCurrentEvent(updatedEvent); // Update the current event state
+      onClose(); // Close the edit modal
 
       toast({
         title: "Event updated.",
@@ -111,6 +114,7 @@ export const EventPage = () => {
     }
   };
 
+  // Handle event deletion
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -132,7 +136,7 @@ export const EventPage = () => {
         isClosable: true,
       });
 
-      // Verwijs terug naar event list of homepage
+      // Redirect back to the event list or homepage
       navigate("/");
     } catch (error) {
       toast({
@@ -144,7 +148,7 @@ export const EventPage = () => {
       });
       console.error(error);
     } finally {
-      closeDeleteModal();
+      closeDeleteModal(); // Close the delete modal after action
     }
   };
 
@@ -165,6 +169,7 @@ export const EventPage = () => {
         maxW="900px"
         w="full"
       >
+        {/* Event image */}
         <Image
           src={currentEvent.image}
           alt={currentEvent.title}
@@ -176,6 +181,7 @@ export const EventPage = () => {
           h="300px"
         />
 
+        {/* Event title */}
         <Heading
           as="h1"
           size="2xl"
@@ -187,6 +193,7 @@ export const EventPage = () => {
           {currentEvent.title}
         </Heading>
 
+        {/* Event description */}
         <Text
           fontSize="lg"
           mb={6}
@@ -197,6 +204,7 @@ export const EventPage = () => {
           {currentEvent.description}
         </Text>
 
+        {/* Event start and end times */}
         <Text
           fontSize="lg"
           mb={6}
@@ -208,6 +216,18 @@ export const EventPage = () => {
           <strong>End time:</strong> {endTime}
         </Text>
 
+        {/* Location */}
+        <Text
+          fontSize="lg"
+          mb={6}
+          maxW="800px"
+          textAlign="center"
+          color="gray.600"
+        >
+          <strong>Location:</strong> {currentEvent.location} <br />
+        </Text>
+
+        {/* Categories */}
         <Heading
           size="lg"
           mb={4}
@@ -233,6 +253,7 @@ export const EventPage = () => {
           ))}
         </HStack>
 
+        {/* User info */}
         <Box
           textAlign="center"
           mt={12}
@@ -254,12 +275,12 @@ export const EventPage = () => {
           </Text>
         </Box>
 
-        {/* EDIT BUTTON */}
+        {/* Edit button */}
         <Button onClick={onOpen} colorScheme="teal" mt={8} width="full">
           Edit Event
         </Button>
 
-        {/* EDIT MODAL */}
+        {/* Edit modal */}
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
@@ -269,15 +290,18 @@ export const EventPage = () => {
               <EventForm
                 onSubmit={handleUpdate}
                 categories={categories}
-                initialData={currentEvent} // <-- Geef de huidige event data mee
+                initialData={currentEvent} // Pass current event data to form
               />
             </ModalBody>
           </ModalContent>
         </Modal>
+
+        {/* Delete button */}
         <Button colorScheme="red" mt={4} width="full" onClick={openDeleteModal}>
           Delete Event
         </Button>
 
+        {/* Delete confirmation modal */}
         <DeleteConfirmationModal
           isOpen={isDeleteOpen}
           onClose={closeDeleteModal}
